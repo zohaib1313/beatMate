@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentHomeBinding
 
+const val DEFAULT_BPM = 100
 
-class HomeFragment : Fragment() {
+class HomeFragment : AbstractMetronomeFragment() {
 
 
     private var _binding: FragmentHomeBinding? = null
@@ -95,9 +96,20 @@ class HomeFragment : Fragment() {
                 HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
             )
         }
+        binding.btnPlay.setOnClickListener {
+            metronomeService?.play()
+            GlobalCommon.print("playing")
+        }
         return binding.root
 
     }
+
+    override fun onTick(interval: Int) {
+        if (this.isVisible && metronomeService?.isPlaying!!)
+            GlobalCommon.print("interval $interval");
+        //  activity?.runOnUiThread {beatsView.nextBeat()}
+    }
+
 
     private fun changeSlectedButton(id: Int) {
         when (id) {
