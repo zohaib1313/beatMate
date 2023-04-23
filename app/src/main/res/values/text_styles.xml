@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="normal_text_style">
+
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="bold_text_style">
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:textColor">@color/black</item>
+
+    </style>
+</resources>

@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+  <path
+      android:pathData="M16,0.5L48,0.5A15.5,15.5 0,0 1,63.5 16L63.5,48A15.5,15.5 0,0 1,48 63.5L16,63.5A15.5,15.5 0,0 1,0.5 48L0.5,16A15.5,15.5 0,0 1,16 0.5z"
+      android:fillColor="#ffffff"/>
+  <path
+      android:pathData="M27.432,13.518H31.594V51.59H26.221C22.609,51.59 19.919,48.256 20.683,44.726L27.432,13.518Z"
+      android:fillColor="#C0FFA3"/>
+  <path
+      android:pathData="M33.492,11.752H30.404C27.491,11.752 24.979,13.8 24.391,16.653L18.574,44.918C17.79,48.726 20.699,52.294 24.587,52.294H39.309C43.197,52.294 46.106,48.726 45.322,44.918L42.343,30.442L40.033,34.444L42.316,45.536C42.708,47.441 41.253,49.225 39.309,49.225H24.587C22.643,49.225 21.189,47.441 21.58,45.536L27.398,17.272C27.691,15.845 28.947,14.821 30.404,14.821H33.492C34.949,14.821 36.205,15.845 36.499,17.272L37.341,21.367L39.652,17.366L39.505,16.653C38.918,13.8 36.406,11.752 33.492,11.752Z"
+      android:fillColor="#000000"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M31.948,39.194m-7.438,0a7.438,7.438 0,1 1,14.875 0a7.438,7.438 0,1 1,-14.875 0"
+      android:strokeWidth="0.708333"
+      android:fillColor="#ffffff"
+      android:strokeColor="#000000"/>
+  <path
+      android:pathData="M31.948,39.194m-3.984,0a3.984,3.984 0,1 1,7.969 0a3.984,3.984 0,1 1,-7.969 0"
+      android:strokeWidth="0.177083"
+      android:fillColor="#00000000"
+      android:strokeColor="#000000"/>
+  <path
+      android:pathData="M47.325,12.814L47.325,12.814A1.7,1.7 75,0 1,47.947 15.136L33.553,40.066A1.7,1.7 75,0 1,31.231 40.689L31.231,40.689A1.7,1.7 75,0 1,30.609 38.366L45.002,13.436A1.7,1.7 75,0 1,47.325 12.814z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M31.594,14.757h0.708v16.646h-0.708z"
+      android:fillColor="#000000"/>
+  <path
+      android:strokeWidth="1"
+      android:pathData="M16,0.5L48,0.5A15.5,15.5 0,0 1,63.5 16L63.5,48A15.5,15.5 0,0 1,48 63.5L16,63.5A15.5,15.5 0,0 1,0.5 48L0.5,16A15.5,15.5 0,0 1,16 0.5z"
+      android:fillColor="#00000000"
+      android:strokeColor="#000000"/>
+</vector>
