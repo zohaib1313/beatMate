@@ -166,7 +166,7 @@ class MetronomeService : Service() {
         }
     }
 
-    private fun pause() {
+     fun pause() {
         if (isPlaying) {
             tickJob?.cancel()
             stopForeground(true)

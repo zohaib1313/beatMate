@@ -1,6 +1,8 @@
 package com.bigbird.metronomeapp.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,6 @@ import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentHomeBinding
 
-const val DEFAULT_BPM = 100
 
 class HomeFragment : AbstractMetronomeFragment() {
 
@@ -26,23 +27,14 @@ class HomeFragment : AbstractMetronomeFragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.tempoValue = "1"
 
-        binding.radioBtn1.setOnClickListener {
-            changeSlectedButton(id = 1)
-        }
-        binding.radioBtn2.setOnClickListener {
-            changeSlectedButton(id = 2)
-        }
-        binding.radioBtn3.setOnClickListener {
-            changeSlectedButton(id = 3)
-        }
-        binding.radioBtn4.setOnClickListener {
-            changeSlectedButton(id = 4)
-        }
 
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 binding.tempoValue = progress.toString()
+                metronomeService?.setBpm(progress)
+
+
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -58,37 +50,54 @@ class HomeFragment : AbstractMetronomeFragment() {
         ////tempo ivs
         binding.ivRemoveTempoValue.setOnClickListener {
             val tempoValue: Int = Integer.parseInt(binding.tempoValue)
-            if (tempoValue > 0)
-                binding.tempoValue = (tempoValue - 1).toString()
+            if (tempoValue > 0) {
+                val value = (tempoValue - 1)
+                binding.tempoValue = value.toString()
+            }
         }
         binding.ivAddTempoValue.setOnClickListener {
             val tempoValue: Int = Integer.parseInt(binding.tempoValue)
-            if (tempoValue < 200)
-                binding.tempoValue = (tempoValue + 1).toString()
+            if (tempoValue < 200) {
+                val value = (tempoValue + 1)
+                binding.tempoValue = value.toString()
+
+            }
+
         }
         ///tempo tvS
         binding.removeFive.setOnClickListener {
             val tempoValue: Int = Integer.parseInt(binding.tempoValue) - 5
-            if (tempoValue > 0)
+            if (tempoValue > 0) {
+
                 binding.tempoValue = tempoValue.toString()
+
+
+            }
         }
         binding.divideTwo.setOnClickListener {
             val tempoValue: Int = Integer.parseInt(binding.tempoValue) / 5
-            if (tempoValue > 0)
+            if (tempoValue > 0) {
                 binding.tempoValue = tempoValue.toString()
 
+
+            }
         }
         binding.multiplyTwo.setOnClickListener {
             val tempoValue: Int = Integer.parseInt(binding.tempoValue) * 2
-            if (tempoValue < 200)
+            if (tempoValue < 200) {
                 binding.tempoValue = tempoValue.toString()
 
+
+            }
         }
         binding.addFive.setOnClickListener {
 
             val tempoValue: Int = Integer.parseInt(binding.tempoValue) + 5
-            if (tempoValue < 200)
+            if (tempoValue < 200) {
                 binding.tempoValue = tempoValue.toString()
+
+
+            }
         }
 
         binding.btnSettings.setOnClickListener {
@@ -97,48 +106,43 @@ class HomeFragment : AbstractMetronomeFragment() {
             )
         }
         binding.btnPlay.setOnClickListener {
-            metronomeService?.play()
-            GlobalCommon.print("playing")
+
+            metronomeService?.isPlaying?.let {
+                if (it) {
+                    binding.beatsView.resetBeats(true)
+                    binding.btnPlay.setBackgroundResource(R.drawable.play_arrow)
+                    metronomeService?.pause()
+                    GlobalCommon.print("stopped")
+                } else {
+                    binding.beatsView.resetBeats(true)
+                    binding.btnPlay.setBackgroundResource(R.drawable.stop_arrow)
+                    metronomeService?.play()
+                    GlobalCommon.print("playing")
+                }
+
+            }
+
         }
+
+
+        binding.tvTempoValue.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+
+                val bpm = Integer.parseInt(charSequence.toString())
+                metronomeService?.setBpm(bpm)
+
+            }
+
+            override fun afterTextChanged(editable: Editable) {}
+        })
         return binding.root
 
     }
 
     override fun onTick(interval: Int) {
         if (this.isVisible && metronomeService?.isPlaying!!)
-            GlobalCommon.print("interval $interval");
-        //  activity?.runOnUiThread {beatsView.nextBeat()}
-    }
-
-
-    private fun changeSlectedButton(id: Int) {
-        when (id) {
-            1 -> {
-                binding.radioBtn1.setBackgroundResource(R.drawable.rounded_button_selected)
-                binding.radioBtn2.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn3.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn4.setBackgroundResource(R.drawable.rounded_holo)
-            }
-            2 -> {
-                binding.radioBtn1.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn2.setBackgroundResource(R.drawable.rounded_button_selected)
-                binding.radioBtn3.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn4.setBackgroundResource(R.drawable.rounded_holo)
-            }
-            3 -> {
-                binding.radioBtn1.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn2.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn3.setBackgroundResource(R.drawable.rounded_button_selected)
-                binding.radioBtn4.setBackgroundResource(R.drawable.rounded_holo)
-            }
-            4 -> {
-                binding.radioBtn1.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn2.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn3.setBackgroundResource(R.drawable.rounded_holo)
-                binding.radioBtn4.setBackgroundResource(R.drawable.rounded_button_selected)
-            }
-
-        }
+            activity?.runOnUiThread { binding.beatsView.nextBeat() }
     }
 
 

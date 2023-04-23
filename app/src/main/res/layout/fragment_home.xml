@@ -71,7 +71,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-                <ImageView
+                <view
+                    android:id="@+id/beatsView"
+                    class="com.bigbird.metronomeapp.views.BeatsView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                  />
+
+          <!--      <ImageView
                     android:id="@+id/radioBtn1"
 
                     android:layout_width="0dp"
@@ -88,7 +96,6 @@
                     android:layout_weight="1"
                     android:background="@drawable/rounded_holo" />
 
-
                 <ImageView
                     android:id="@+id/radioBtn3"
                     android:layout_width="0dp"
@@ -97,7 +104,6 @@
                     android:layout_weight="1"
                     android:background="@drawable/rounded_holo" />
 
-
                 <ImageView
                     android:id="@+id/radioBtn4"
 
@@ -105,7 +111,7 @@
                     android:layout_height="@dimen/_32sdp"
                     android:layout_marginHorizontal="@dimen/_8sdp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_holo" />
+                    android:background="@drawable/rounded_holo" />-->
 
 
             </LinearLayout>
@@ -165,7 +171,7 @@
                 app:layout_constraintGuide_percent="0.7" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/tvTempoValue"
                 style="@style/bold_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -189,7 +195,7 @@
                 android:thumb="@drawable/custom_thumb"
                 app:layout_constraintEnd_toEndOf="@+id/ivAddTempoValue"
                 app:layout_constraintStart_toStartOf="@+id/ivRemoveTempoValue"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTempoValue" />
 
 
             <LinearLayout
