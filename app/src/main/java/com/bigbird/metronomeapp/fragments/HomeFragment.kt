@@ -46,6 +46,7 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
         binding.tempoValue = Keys.defaultBpm.toString()
         binding.activeTempo = AppUtils.getTempoDescription(Keys.defaultBpm)
         binding.seekBar.max = Keys.maxProgress
+        metronomeService?.setBpm(Keys.defaultBpm)
 
 
         isFlashOn =

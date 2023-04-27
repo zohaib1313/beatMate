@@ -18,7 +18,7 @@ private const val TAG = "METRONOME_SERVICE"
 private const val CHANNEL_ID = "METRONOME SERVICE"
 private const val STOP_SERVICE = "STOP_METRONOME_SERVICE"
 private const val MAX_BPM = 220
-private const val MIN_BPM = 40
+private const val MIN_BPM = 20
 
 /**
  * The Metronome service is responsible for playing, stoping and timing the ticks.

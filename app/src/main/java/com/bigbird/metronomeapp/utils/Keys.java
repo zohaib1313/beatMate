@@ -14,5 +14,5 @@ public class Keys {
 
     public static final int maxProgress = 300;
 
-    public static final int defaultBpm = 1;
+    public static final int defaultBpm = 100;
 }
