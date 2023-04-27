@@ -9,7 +9,7 @@ public class Keys {
     public static String keyColorFlashOn = "keyColorFlashOn";
     public static String keyBackgroundPlay = "keyBackgroundPlay";
     public static String keyVolume = "keyVolume";
-    public static String keyPracticeTime = "keyPracticeTime";
+    public static String keyPracticeTime = "bKeyPracticeTime";
 
 
     public static final int maxProgress = 300;

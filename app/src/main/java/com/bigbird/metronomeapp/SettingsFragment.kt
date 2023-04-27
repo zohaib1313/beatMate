@@ -1,12 +1,15 @@
 package com.bigbird.metronomeapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bigbird.metronomeapp.databinding.FragmentSettingsBinding
+
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
 import com.bigbird.metronomeapp.utils.MySharedPreferences
@@ -19,6 +22,7 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
     private var isFlashOn: String = "false"
     private var activeTheme: String = Colors.White.name
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -43,7 +47,23 @@ class SettingsFragment : Fragment() {
         setupTheme()
 
 
+        //practice time
+        readPracticeTime()
+
     }
+
+    @SuppressLint("SetTextI18n")
+    private fun readPracticeTime() {
+        val practiceTime: String =
+            MySharedPreferences(requireContext()).getValue(key = Keys.keyPracticeTime, "0")
+                .toString()
+
+
+        binding.tvTimePicker.text = GlobalCommon.formatTime(Integer.parseInt(practiceTime))
+
+    }
+
+
 
     private fun setupFlash() {
         isFlashOn =
@@ -131,5 +151,6 @@ class SettingsFragment : Fragment() {
         }
 
     }
+
 
 }

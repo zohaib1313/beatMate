@@ -7,14 +7,12 @@ import android.graphics.drawable.Icon
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.bigbird.metronomeapp.MainActivity
 import com.bigbird.metronomeapp.R
-
 import kotlinx.coroutines.*
+import java.util.*
 
 private const val TAG = "METRONOME_SERVICE"
 private const val CHANNEL_ID = "METRONOME SERVICE"
@@ -28,7 +26,9 @@ private const val MIN_BPM = 40
  * The fragments to bind keep referencing it.
  * The service is starting foreground mode on play() and exits it on stop().
  */
-class MetronomeService : Service() {
+class MetronomeService() : Service() {
+
+
     private val binder = MetronomeBinder()
     private lateinit var soundPool: SoundPool
     private var tickJob: Job? = null
@@ -143,6 +143,8 @@ class MetronomeService : Service() {
         if (!isPlaying) {
             startForegroundNotification()
             tickJob = coroutineScope.launch(Dispatchers.Default) {
+
+
                 isPlaying = true
                 var tick = 0
                 while (isPlaying && isActive) {
@@ -161,12 +163,12 @@ class MetronomeService : Service() {
                         tick = 0
                 }
             }
-        }else{
+        } else {
             pause()
         }
     }
 
-     fun pause() {
+    fun pause() {
         if (isPlaying) {
             tickJob?.cancel()
             stopForeground(true)
@@ -200,7 +202,6 @@ class MetronomeService : Service() {
     /**
      * Rotates to the next rhythm
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     fun nextRhythm(): Rhythm {
         val isPlaying = this.isPlaying
         rhythm = rhythm.next()
@@ -268,7 +269,10 @@ class MetronomeService : Service() {
 
     interface TickListener {
         fun onTick(interval: Int)
+
     }
+
+
 }
 
 

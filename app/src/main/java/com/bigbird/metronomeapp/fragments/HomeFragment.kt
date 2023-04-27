@@ -1,5 +1,8 @@
 package com.bigbird.metronomeapp.fragments
 
+
+import TimeTicker
+import TimeTickerListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,13 +15,14 @@ import androidx.navigation.fragment.findNavController
 import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentHomeBinding
+
 import com.bigbird.metronomeapp.utils.AppUtils
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
 import com.bigbird.metronomeapp.utils.MySharedPreferences
 
 
-class HomeFragment : AbstractMetronomeFragment() {
+class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
 
     private var _binding: FragmentHomeBinding? = null
@@ -29,6 +33,8 @@ class HomeFragment : AbstractMetronomeFragment() {
     private var activeTheme: String = Colors.Green.name
     private var toggleColor: Boolean = false
 
+    var totalPlayedForSeconds: Int = 0
+    val timeTicker: TimeTicker = TimeTicker(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,12 +52,9 @@ class HomeFragment : AbstractMetronomeFragment() {
             MySharedPreferences(requireContext()).getValue(key = Keys.keyColorFlashOn, "false")
                 .toString()
 
-        activeTheme =
-            MySharedPreferences(requireContext()).getValue(
-                key = Keys.keyActiveThemeColor,
-                Colors.White.name
-            ).toString()
-
+        activeTheme = MySharedPreferences(requireContext()).getValue(
+            key = Keys.keyActiveThemeColor, Colors.White.name
+        ).toString()
 
 
 
@@ -136,12 +139,28 @@ class HomeFragment : AbstractMetronomeFragment() {
                     binding.beatsView.resetBeats(true)
                     binding.btnPlay.setBackgroundResource(R.drawable.play_arrow)
                     metronomeService?.pause()
-                    GlobalCommon.print("stopped")
+                    timeTicker.stop()
+
+                    val practiceTime: String =
+                        MySharedPreferences(requireContext()).getValue(key = Keys.keyPracticeTime, "0")
+                            .toString()
+                    GlobalCommon.print("lastSaved time = $practiceTime")
+                    GlobalCommon.print("sesssion time = $totalPlayedForSeconds")
+                    val timeee = totalPlayedForSeconds + Integer.parseInt(practiceTime)
+
+                    GlobalCommon.print("total session time = ${(timeee)}")
+                    MySharedPreferences(requireContext()).setValue(
+                        Keys.keyPracticeTime,
+                        timeee.toString()
+                    )
+
                 } else {
                     binding.beatsView.resetBeats(true)
                     binding.btnPlay.setBackgroundResource(R.drawable.stop_arrow)
+                    timeTicker.start()
                     metronomeService?.play()
-                    GlobalCommon.print("playing")
+
+
                 }
 
             }
@@ -161,9 +180,15 @@ class HomeFragment : AbstractMetronomeFragment() {
 
             override fun afterTextChanged(editable: Editable) {}
         })
+
+
+
+
+
         return binding.root
 
     }
+
 
     override fun onTick(interval: Int) {
         if (this.isVisible && metronomeService?.isPlaying!!) {
@@ -189,16 +214,14 @@ class HomeFragment : AbstractMetronomeFragment() {
 
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.purple_a
+                            requireContext(), R.color.purple_a
                         )
                     )
 
                 } else {
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.purple_b
+                            requireContext(), R.color.purple_b
                         )
                     )
                 }
@@ -208,16 +231,14 @@ class HomeFragment : AbstractMetronomeFragment() {
 
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.silver_a
+                            requireContext(), R.color.silver_a
                         )
                     )
 
                 } else {
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.silver_b
+                            requireContext(), R.color.silver_b
                         )
                     )
                 }
@@ -227,16 +248,14 @@ class HomeFragment : AbstractMetronomeFragment() {
 
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.green_a
+                            requireContext(), R.color.green_a
                         )
                     )
 
                 } else {
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.green_b
+                            requireContext(), R.color.green_b
                         )
                     )
                 }
@@ -246,16 +265,14 @@ class HomeFragment : AbstractMetronomeFragment() {
 
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.pink_a
+                            requireContext(), R.color.pink_a
                         )
                     )
 
                 } else {
                     binding.constraintLayoutMain.setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.pink_b
+                            requireContext(), R.color.pink_b
                         )
                     )
                 }
@@ -263,5 +280,15 @@ class HomeFragment : AbstractMetronomeFragment() {
         }
         toggleColor = !toggleColor
     }
+
+    override fun onSecondsTick(secondsPassed: Int) {
+
+        activity?.runOnUiThread {
+            binding.tvTimer.text = GlobalCommon.formatTime(secondsPassed)
+        }
+        totalPlayedForSeconds = secondsPassed
+
+    }
+
 
 }

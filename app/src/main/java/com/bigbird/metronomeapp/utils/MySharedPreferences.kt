@@ -2,14 +2,17 @@ package com.bigbird.metronomeapp.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 open class MySharedPreferences(context: Context) {
 
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        Keys.keySharedPref, Context.MODE_PRIVATE)
+        Keys.keySharedPref, Context.MODE_PRIVATE
+    )
 
-   open fun setValue(key: String, value: String) {
+    open fun setValue(key: String, value: String) {
         val editor = sharedPreferences.edit()
         editor.putString(key, value)
         editor.apply()
@@ -25,10 +28,18 @@ open class MySharedPreferences(context: Context) {
         editor.apply()
     }
 
-    open  fun clearAllValues() {
+    open fun clearAllValues() {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
+    }
+
+    suspend fun saveAsyncValue(key: String, value: String) {
+        withContext(Dispatchers.IO) {
+            val editor = sharedPreferences.edit()
+            editor.putString(key, value)
+            editor.apply()
+        }
     }
 }
 
