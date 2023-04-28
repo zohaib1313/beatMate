@@ -10,7 +10,7 @@
 
     <color name="green_a">#9EFFAE</color>
     <color name="green_b">#809EFFAE</color>
-
+    <color name="transparent">#00854646</color>
 
     <color name="pink_a">#FFC9E9</color>
     <color name="pink_b">#80FFC9E9</color>
@@ -25,7 +25,7 @@
 
     <color name="white">#FFFFFF</color>
 
-    <color name="grey">#1A000000</color>
+    <color name="grey">#E6E6E6</color>
     <color name="blackFifty">#80000000</color>
 
 

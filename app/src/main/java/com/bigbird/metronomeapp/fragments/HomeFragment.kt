@@ -3,6 +3,7 @@ package com.bigbird.metronomeapp.fragments
 
 import TimeTicker
 import TimeTickerListener
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentHomeBinding
-
 import com.bigbird.metronomeapp.utils.AppUtils
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
@@ -138,12 +138,15 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
             metronomeService?.isPlaying?.let {
                 if (it) {
                     binding.beatsView.resetBeats(true)
-                    binding.btnPlay.setBackgroundResource(R.drawable.play_arrow)
+                    binding.btnPlay.setImageResource(R.drawable.play_arrow)
+
                     metronomeService?.pause()
                     timeTicker.stop()
-
                     val practiceTime: String =
-                        MySharedPreferences(requireContext()).getValue(key = Keys.keyPracticeTime, "0")
+                        MySharedPreferences(requireContext()).getValue(
+                            key = Keys.keyPracticeTime,
+                            "0"
+                        )
                             .toString()
                     GlobalCommon.print("lastSaved time = $practiceTime")
                     GlobalCommon.print("sesssion time = $totalPlayedForSeconds")
@@ -157,7 +160,7 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
                 } else {
                     binding.beatsView.resetBeats(true)
-                    binding.btnPlay.setBackgroundResource(R.drawable.stop_arrow)
+                    binding.btnPlay.setImageResource(R.drawable.stop_arrow)
                     timeTicker.start()
                     metronomeService?.play()
 
@@ -183,11 +186,86 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
         })
 
 
-
+        setInitialTheme(activeTheme)
 
 
         return binding.root
 
+    }
+
+    private fun setInitialTheme(activeColor: String) {
+        when (activeColor) {
+
+            Colors.White.name -> {
+                changeButtonColors(color = R.color.white)
+                binding.mainLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+            }
+            Colors.Purple.name -> {
+                changeButtonColors(color = R.color.purple_a)
+                binding.mainLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.purple_b
+                    )
+                )
+
+
+            }
+            Colors.Silver.name -> {
+                changeButtonColors(color = R.color.silver_a)
+                binding.mainLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.silver_b
+                    )
+                )
+
+            }
+            Colors.Green.name -> {
+                changeButtonColors(color = R.color.green_a)
+                binding.mainLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_b
+                    )
+                )
+
+
+            }
+            Colors.Pink.name -> {
+                changeButtonColors(color = R.color.pink_a)
+
+                binding.mainLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.purple_b
+                    )
+                )
+
+            }
+        }
+
+
+    }
+
+    private fun changeButtonColors(color: Int) {
+        ColorStateList.valueOf(
+            ContextCompat.getColor(requireContext(), color)
+        ).let {
+            binding.ivRemoveTempoValue.backgroundTintList = it
+            binding.ivAddTempoValue.backgroundTintList = it
+            binding.removeFive.backgroundTintList = it
+            binding.divideTwo.backgroundTintList = it
+            binding.multiplyTwo.backgroundTintList = it
+            binding.addFive.backgroundTintList = it
+
+
+        }
     }
 
 
@@ -212,19 +290,23 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
             }
             Colors.Purple.name -> {
                 if (toggleColor) {
+                    ContextCompat.getColor(
+                        requireContext(), R.color.purple_a
+                    ).let { it ->
+                        binding.constraintLayoutMain.setBackgroundColor(it)
 
-                    binding.constraintLayoutMain.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(), R.color.purple_a
-                        )
-                    )
+                    }
+
 
                 } else {
-                    binding.constraintLayoutMain.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(), R.color.purple_b
-                        )
-                    )
+                    ContextCompat.getColor(
+                        requireContext(), R.color.purple_b
+                    ).let {
+                        binding.constraintLayoutMain.setBackgroundColor(it)
+
+
+                    }
+
                 }
             }
             Colors.Silver.name -> {

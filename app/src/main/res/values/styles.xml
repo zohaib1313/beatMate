@@ -6,4 +6,17 @@
     </style>
 
 
+    <style name="buttonStyle" parent="">
+        <item name="backgroundTint">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="MyButtonShapeAppearance" parent="Widget.MaterialComponents.Button">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">100%</item>
+
+    </style>
+
+
 </resources>
+

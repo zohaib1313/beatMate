@@ -29,7 +29,7 @@ abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickList
         isBound = true
     }
 
-    protected val mConnection: ServiceConnection = object : ServiceConnection {
+    private val mConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             metronomeService = (service as MetronomeService.MetronomeBinder).getService()
             metronomeService?.addTickListener(this@AbstractMetronomeFragment)
