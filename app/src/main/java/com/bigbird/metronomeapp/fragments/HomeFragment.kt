@@ -133,6 +133,13 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
             )
         }
 
+        metronomeService?.isPlaying?.let {
+            if (it) {
+                binding.btnPlay.setImageResource(R.drawable.stop_arrow)
+            }
+        }
+
+
         binding.btnPlay.setOnClickListener {
 
             metronomeService?.isPlaying?.let {
