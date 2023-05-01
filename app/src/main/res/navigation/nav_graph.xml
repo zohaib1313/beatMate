@@ -44,7 +44,9 @@
         android:id="@+id/settingsFragment"
         android:name="com.bigbird.metronomeapp.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+
+    </fragment>
     <!--    <fragment-->
     <!--        android:id="@+id/deviceInfoFragment"-->
     <!--        android:name="analytics.android.pba.views.fragments.deviceInfo.DeviceInfoFragment"-->

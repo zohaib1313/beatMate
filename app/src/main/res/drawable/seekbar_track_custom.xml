@@ -1,0 +1,11 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This drawable will be the background of the progress bar -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#cccccc" />
+        </shape>
+    </item>
+
+    <!-- This drawable will be the progress of the progress bar -->
+
+</layer-list>

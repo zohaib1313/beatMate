@@ -7,15 +7,18 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentHomeBinding
+import com.bigbird.metronomeapp.services.SharedViewModel
 import com.bigbird.metronomeapp.utils.AppUtils
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
@@ -26,21 +29,30 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
 
     private var _binding: FragmentHomeBinding? = null
+    private lateinit var viewModel: SharedViewModel
 
     private val binding get() = _binding!!
+
+    ///taps
+    private var tapCount = 0
+    private var totalDuration: Double = 0.0
+    private var lastTapTime: Double = 0.0
+
 
     private var isFlashOn: String = "true"
     private var activeTheme: String = Colors.Green.name
     private var toggleColor: Boolean = false
 
-    var totalPlayedForSeconds: Int = 0
-    val timeTicker: TimeTicker = TimeTicker(this)
+    private var totalPlayedForSeconds: Int = 0
+    private val timeTicker: TimeTicker = TimeTicker(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
         ///setting defaults
         binding.tempoValue = Keys.defaultBpm.toString()
@@ -128,9 +140,14 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
         }
 
         binding.btnSettings.setOnClickListener {
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
-            )
+            metronomeService?.let {
+                viewModel.metronomeService.value = it
+
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+                )
+            }
+
         }
 
         metronomeService?.isPlaying?.let {
@@ -195,10 +212,36 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
         setInitialTheme(activeTheme)
 
+        binding.llTempoTap.setOnClickListener {
+            tapCount++
+            val currentTime = System.currentTimeMillis()
+            if (tapCount == 1) {
+                lastTapTime = currentTime.toDouble()
+            } else {
+                val duration = currentTime - lastTapTime
+                totalDuration += duration
+                lastTapTime = currentTime.toDouble()
+                if (tapCount == 5) {
+                    val averageDuration = totalDuration / 4
+                    val averageSeconds = (averageDuration / 1000)
+                    val bpm = ((60.0) / averageSeconds).toInt()
+                    Log.d("Tap Timing", "Average duration: $averageSeconds s")
+                    Log.d("Tap Timing", "BPM: $bpm")
+
+                    binding.tempoValue = bpm.toString()
+
+                    tapCount = 0
+                    totalDuration = 0.0
+                }
+            }
+
+        }
+
 
         return binding.root
 
     }
+
 
     private fun setInitialTheme(activeColor: String) {
         when (activeColor) {

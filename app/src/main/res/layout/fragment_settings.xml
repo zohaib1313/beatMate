@@ -43,9 +43,9 @@
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:paddingBottom="@dimen/_40sdp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/_40sdp">
 
 
             <ImageView
@@ -106,14 +106,14 @@
 
 
             <SeekBar
-                android:id="@+id/seekBar"
+                android:id="@+id/seekBarVolume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_14sdp"
                 android:max="200"
-                android:maxHeight="10dp"
-                android:minHeight="10dp"
+                android:maxHeight="@dimen/_4sdp"
+                android:minHeight="@dimen/_4sdp"
                 android:progressDrawable="@drawable/custom_seekbar"
                 android:splitTrack="false"
                 android:thumb="@drawable/custom_thumb"
@@ -135,7 +135,7 @@
                 android:textSize="@dimen/_18sdp"
 
                 app:layout_constraintStart_toStartOf="@+id/textView7"
-                app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+                app:layout_constraintTop_toBottomOf="@+id/seekBarVolume" />
 
             <SeekBar
                 android:id="@+id/seekBarStereoPanning"
@@ -143,14 +143,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_14sdp"
-                android:max="200"
-                android:maxHeight="10dp"
-                android:minHeight="10dp"
+                android:maxHeight="@dimen/_4sdp"
+                android:minHeight="@dimen/_4sdp"
+                android:max="100"
+                android:min="0"
+                android:progress="50"
 
-                android:progressDrawable="@drawable/custom_seekbar"
+                android:progressDrawable="@drawable/seekbar_track_custom"
                 android:splitTrack="false"
                 android:thumb="@drawable/custom_thumb"
-                app:layout_constraintEnd_toEndOf="@+id/seekBar"
+                app:layout_constraintEnd_toEndOf="@+id/seekBarVolume"
                 app:layout_constraintStart_toStartOf="@+id/textView8"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 

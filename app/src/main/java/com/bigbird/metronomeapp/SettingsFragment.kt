@@ -1,21 +1,27 @@
 package com.bigbird.metronomeapp
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.LayerDrawable
+import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bigbird.metronomeapp.databinding.FragmentSettingsBinding
-
+import com.bigbird.metronomeapp.services.SharedViewModel
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
 import com.bigbird.metronomeapp.utils.MySharedPreferences
-
 class SettingsFragment : Fragment() {
 
+    private lateinit var audioManager: AudioManager
+
+    private lateinit var viewModel: SharedViewModel
 
     private var _binding: FragmentSettingsBinding? = null
 
@@ -28,13 +34,20 @@ class SettingsFragment : Fragment() {
     ): View {
 
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        viewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+
+
         return binding.root
 
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        /* metronomeService?.setVolume(0.0f, 0.0f)
+         metronomeService?.pause()*/
 
         ///back button
         binding.ivBack.setOnClickListener {
@@ -50,6 +63,59 @@ class SettingsFragment : Fragment() {
         //practice time
         readPracticeTime()
 
+        //volume
+        setupVolume()
+
+        //steroPaning
+        setupStereoPanning()
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setupStereoPanning() {
+
+
+
+        binding.seekBarStereoPanning.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+                // adjust left and right volumes based on seek bar progress
+                val leftVolume = (100 - progress) / 100f
+                val rightVolume = progress / 100f
+
+                GlobalCommon.print("left=$leftVolume right=$rightVolume")
+                viewModel.metronomeService.value?.setVolume(leftVolume, rightVolume)
+                // viewModel.metronomeService.value?.setRate(if (progress >= 50) -1f else 1f)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
+    }
+
+    private fun setupVolume() {
+
+
+        binding.seekBarVolume.max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        binding.seekBarVolume.progress = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+
+        binding.seekBarVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                audioManager.setStreamVolume(
+                    AudioManager.STREAM_MUSIC,
+                    progress,
+                    AudioManager.FLAG_PLAY_SOUND
+                )
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+
+        })
     }
 
     @SuppressLint("SetTextI18n")
@@ -62,7 +128,6 @@ class SettingsFragment : Fragment() {
         binding.tvTimePicker.text = GlobalCommon.formatTime(Integer.parseInt(practiceTime))
 
     }
-
 
 
     private fun setupFlash() {

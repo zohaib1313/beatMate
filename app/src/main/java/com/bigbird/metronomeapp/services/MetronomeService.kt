@@ -30,6 +30,10 @@ class MetronomeService() : Service() {
 
 
     private val binder = MetronomeBinder()
+    private var leftVolume: Float = 1.0f
+    private var rightVolume: Float = 1.0f
+    private var rate: Float = 1.0f
+
     private lateinit var soundPool: SoundPool
     private var tickJob: Job? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -148,7 +152,7 @@ class MetronomeService() : Service() {
                 isPlaying = true
                 var tick = 0
                 while (isPlaying && isActive) {
-                    var rate = 1f
+                    var rate = rate
                     delay(interval.toLong())
                     if (tick % rhythm.value == 0) {
                         for (t in tickListeners)
@@ -156,7 +160,10 @@ class MetronomeService() : Service() {
                         if (emphasis && tick == 0)
                             rate = 1.4f
                     }
-                    if (isPlaying) soundPool.play(tone.value, 1f, 1f, 1, 0, rate)
+                    if (isPlaying) {
+                        soundPool.play(tone.value, leftVolume, rightVolume, 1, 0, rate)
+
+                    }
                     if (tick < beatsPerMeasure * rhythm.value - 1)
                         tick++
                     else
@@ -174,6 +181,17 @@ class MetronomeService() : Service() {
             stopForeground(true)
             isPlaying = false
         }
+    }
+
+    fun setVolume(leftVolume: Float, rightVolume: Float) {
+
+        this.leftVolume = leftVolume
+        this.rightVolume = rightVolume
+
+    }
+
+    fun setRate(rate: Float) {
+        this.rate = rate
     }
 
     /**

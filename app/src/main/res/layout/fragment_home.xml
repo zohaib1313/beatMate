@@ -23,6 +23,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:id="@+id/mainLayout"
+        android:theme="@style/Theme.MetronomeApp"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -136,8 +137,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:max="200"
-                android:maxHeight="10dp"
-                android:minHeight="10dp"
+                android:maxHeight="@dimen/_4sdp"
+                android:minHeight="@dimen/_4sdp"
                 android:progress="@{Integer.valueOf(tempoValue)}"
                 android:progressDrawable="@drawable/custom_seekbar"
                 android:splitTrack="false"
@@ -316,6 +317,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llTempoTap"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_45sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
@@ -346,6 +348,8 @@
                     android:text="Tap Tempo" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
