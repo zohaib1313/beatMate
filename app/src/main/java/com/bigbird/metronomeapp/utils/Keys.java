@@ -1,5 +1,6 @@
 package com.bigbird.metronomeapp.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Keys {
@@ -15,4 +16,6 @@ public class Keys {
     public static final int maxProgress = 300;
 
     public static final int defaultBpm = 100;
+
+    public static final String keyStereoPanning="keyStereoPanning";
 }

@@ -8,15 +8,22 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.services.MetronomeService
 
-abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickListener{
+abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickListener {
     protected var isBound = false
     protected var metronomeService: MetronomeService? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindService()
+//      requireContext().startForegroundService( Intent(
+//            activity,
+//            MetronomeService::class.java
+//        ))
+//
+//        metronomeService?.addTickListener(this@AbstractMetronomeFragment)
     }
 
     private fun bindService() {
@@ -31,6 +38,7 @@ abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickList
 
     private val mConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            GlobalCommon.print("service**** connected***")
             metronomeService = (service as MetronomeService.MetronomeBinder).getService()
             metronomeService?.addTickListener(this@AbstractMetronomeFragment)
         }
@@ -38,6 +46,8 @@ abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickList
         override fun onServiceDisconnected(className: ComponentName) {
             metronomeService = null
             isBound = false
+            GlobalCommon.print("service**** disconnected***")
+
         }
     }
 

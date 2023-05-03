@@ -2,7 +2,6 @@ package com.bigbird.metronomeapp
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.LayerDrawable
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import com.bigbird.metronomeapp.services.SharedViewModel
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
 import com.bigbird.metronomeapp.utils.MySharedPreferences
+
 class SettingsFragment : Fragment() {
 
     private lateinit var audioManager: AudioManager
@@ -28,6 +28,7 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
     private var isFlashOn: String = "false"
     private var activeTheme: String = Colors.White.name
+    private var stereoProgress: Float = 50.0f
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -74,18 +75,30 @@ class SettingsFragment : Fragment() {
     private fun setupStereoPanning() {
 
 
+        MySharedPreferences(requireContext()).getValue(key = Keys.keyStereoPanning, "50")?.let {
+            stereoProgress = it.toFloat()
+            val leftVolume = (100 - stereoProgress) / 100f
+            val rightVolume = stereoProgress / 100f
+            GlobalCommon.print("left=$leftVolume right=$rightVolume")
+            binding.seekBarStereoPanning.progress = stereoProgress.toInt()
+            viewModel.metronomeService.value?.setVolume(leftVolume, rightVolume)
+
+        }
 
         binding.seekBarStereoPanning.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
+                GlobalCommon.print(progress.toString())
                 // adjust left and right volumes based on seek bar progress
                 val leftVolume = (100 - progress) / 100f
                 val rightVolume = progress / 100f
 
                 GlobalCommon.print("left=$leftVolume right=$rightVolume")
                 viewModel.metronomeService.value?.setVolume(leftVolume, rightVolume)
-                // viewModel.metronomeService.value?.setRate(if (progress >= 50) -1f else 1f)
+                MySharedPreferences(requireContext()).setValue(
+                    key = Keys.keyStereoPanning,
+                    progress.toString()
+                )
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
