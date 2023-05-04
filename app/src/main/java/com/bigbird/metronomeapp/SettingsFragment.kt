@@ -27,6 +27,8 @@ class SettingsFragment : Fragment() {
 
     private val binding get() = _binding!!
     private var isFlashOn: String = "false"
+    private var isBackGroundPlayOn: String = "false"
+
     private var activeTheme: String = Colors.White.name
     private var stereoProgress: Float = 50.0f
 
@@ -56,6 +58,9 @@ class SettingsFragment : Fragment() {
         }
         ///flash setup
         setupFlash()
+
+        //
+        setupBackgroundPlay()
 
         ///theme setup
         setupTheme()
@@ -136,8 +141,6 @@ class SettingsFragment : Fragment() {
         val practiceTime: String =
             MySharedPreferences(requireContext()).getValue(key = Keys.keyPracticeTime, "0")
                 .toString()
-
-
         binding.tvTimePicker.text = GlobalCommon.formatTime(Integer.parseInt(practiceTime))
 
     }
@@ -151,6 +154,20 @@ class SettingsFragment : Fragment() {
         binding.switchColorFlash.setOnCheckedChangeListener { _, isChecked ->
             MySharedPreferences(requireContext()).setValue(
                 key = Keys.keyColorFlashOn,
+                isChecked.toString()
+            )
+        }
+    }
+
+
+    private fun setupBackgroundPlay() {
+        isBackGroundPlayOn =
+            MySharedPreferences(requireContext()).getValue(key = Keys.keyBackgroundPlay, "false")
+                .toString()
+        binding.switchBgPlay.isChecked = isBackGroundPlayOn == "true"
+        binding.switchBgPlay.setOnCheckedChangeListener { _, isChecked ->
+            MySharedPreferences(requireContext()).setValue(
+                key = Keys.keyBackgroundPlay,
                 isChecked.toString()
             )
         }

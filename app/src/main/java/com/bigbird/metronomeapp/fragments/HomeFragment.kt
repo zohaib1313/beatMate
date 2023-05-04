@@ -1,8 +1,6 @@
 package com.bigbird.metronomeapp.fragments
 
 
-import TimeTicker
-import TimeTickerListener
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
@@ -18,6 +16,9 @@ import androidx.navigation.fragment.findNavController
 import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentHomeBinding
+import com.bigbird.metronomeapp.services.MetronomeService
+import com.bigbird.metronomeapp.services.MetronomeService.Companion.metronomeService
+import com.bigbird.metronomeapp.services.MetronomeService.Companion.tickGenerator
 import com.bigbird.metronomeapp.services.SharedViewModel
 import com.bigbird.metronomeapp.utils.AppUtils
 import com.bigbird.metronomeapp.utils.Colors
@@ -25,7 +26,7 @@ import com.bigbird.metronomeapp.utils.Keys
 import com.bigbird.metronomeapp.utils.MySharedPreferences
 
 
-class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
+class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerListener {
 
 
     private var _binding: FragmentHomeBinding? = null
@@ -40,27 +41,21 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
 
     private var isFlashOn: String = "true"
-    private var activeTheme: String = Colors.Green.name
+    private var activeTheme: String = Colors.White.name
     private var toggleColor: Boolean = false
 
     private var totalPlayedForSeconds: Int = 0
-    private val timeTicker: TimeTicker = TimeTicker(this)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
-        ///setting defaults
-        binding.tempoValue = Keys.defaultBpm.toString()
-        binding.activeTempo = AppUtils.getTempoDescription(Keys.defaultBpm)
-        binding.seekBar.max = Keys.maxProgress
-        metronomeService?.setBpm(Keys.defaultBpm)
-
-
+        setUpStereo()
+        setupTempo()
+        tickGenerator.setTickListener(this)
         isFlashOn =
             MySharedPreferences(requireContext()).getValue(key = Keys.keyColorFlashOn, "false")
                 .toString()
@@ -96,6 +91,8 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
                 binding.tempoValue = value.toString()
             }
         }
+
+
         binding.ivAddTempoValue.setOnClickListener {
             val tempoValue: Int = Integer.parseInt(binding.tempoValue)
             if (tempoValue < Keys.maxProgress) {
@@ -165,7 +162,7 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
                     binding.btnPlay.setImageResource(R.drawable.play_arrow)
 
                     metronomeService?.pause()
-                    timeTicker.stop()
+
                     val practiceTime: String =
                         MySharedPreferences(requireContext()).getValue(
                             key = Keys.keyPracticeTime,
@@ -185,9 +182,8 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
                 } else {
                     binding.beatsView.resetBeats(true)
                     binding.btnPlay.setImageResource(R.drawable.stop_arrow)
-                    timeTicker.start()
                     metronomeService?.play()
-
+                    setupTempo()
 
                 }
 
@@ -199,11 +195,13 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
         binding.tvTempoValue.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
                 val bpm = Integer.parseInt(charSequence.toString())
                 metronomeService?.setBpm(bpm)
                 binding.activeTempo = AppUtils.getTempoDescription(bpm)
-
+                MySharedPreferences(requireContext()).setValue(
+                    key = Keys.keyActiveTempo,
+                    bpm.toString()
+                )
             }
 
             override fun afterTextChanged(editable: Editable) {}
@@ -211,6 +209,7 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
 
         setInitialTheme(activeTheme)
+
 
         binding.llTempoTap.setOnClickListener {
             tapCount++
@@ -240,6 +239,30 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
         return binding.root
 
+    }
+
+
+    private fun setUpStereo() {
+        MySharedPreferences(requireContext()).getValue(key = Keys.keyStereoPanning, "50")?.let {
+            val stereoProgress = it.toFloat()
+            val leftVolume = (100 - stereoProgress) / 100f
+            val rightVolume = stereoProgress / 100f
+            GlobalCommon.print("left=$leftVolume right=$rightVolume")
+            metronomeService?.setVolume(leftVolume, rightVolume)
+        }
+    }
+
+    private fun setupTempo() {
+
+        MySharedPreferences(requireContext()).getValue(
+            key = Keys.keyActiveTempo,
+            Keys.defaultBpm.toString()
+        )?.let {
+            binding.tempoValue = it
+            binding.activeTempo = AppUtils.getTempoDescription(it.toInt())
+            binding.seekBar.max = Keys.maxProgress
+            metronomeService?.setBpm(it.toInt())
+        }
     }
 
 
@@ -320,7 +343,7 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
 
 
     override fun onTick(interval: Int) {
-        if (this.isVisible && metronomeService?.isPlaying!!) {
+        if (this.isVisible && isAdded && metronomeService?.isPlaying == true) {
             activity?.runOnUiThread { binding.beatsView.nextBeat() }
             activity?.runOnUiThread {
                 if ((activeTheme != Colors.White.name) && (isFlashOn == "true")) {
@@ -415,13 +438,17 @@ class HomeFragment : AbstractMetronomeFragment(), TimeTickerListener {
     }
 
     override fun onSecondsTick(secondsPassed: Int) {
-
-        activity?.runOnUiThread {
-            binding.tvTimer.text = GlobalCommon.formatTime(secondsPassed)
+        if (this.isVisible && isAdded) {
+            activity?.runOnUiThread {
+                binding.tvTimer.text = GlobalCommon.formatTime(secondsPassed)
+            }
         }
         totalPlayedForSeconds = secondsPassed
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
 
+    }
 }

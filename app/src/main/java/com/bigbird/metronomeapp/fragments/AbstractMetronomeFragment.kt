@@ -10,20 +10,41 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.services.MetronomeService
+import com.bigbird.metronomeapp.services.MetronomeService.Companion.metronomeService
+import com.bigbird.metronomeapp.utils.Keys
+import com.bigbird.metronomeapp.utils.MySharedPreferences
 
-abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickListener {
-    protected var isBound = false
-    protected var metronomeService: MetronomeService? = null
+abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickListener,
+    MetronomeService.TimeTickerListener {
+    protected var isLocalBounded = false
+    private var isBackGroundPlayOn: String = "false"
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindService()
-//      requireContext().startForegroundService( Intent(
-//            activity,
-//            MetronomeService::class.java
-//        ))
-//
-//        metronomeService?.addTickListener(this@AbstractMetronomeFragment)
+        isBackGroundPlayOn =
+            MySharedPreferences(requireContext()).getValue(key = Keys.keyBackgroundPlay, "false")
+                .toString()
+
+        GlobalCommon.print("bindinnngnggg")
+        if (isBackGroundPlayOn == "true") {
+            unbindLocalService()
+            bindGlobalService()
+            GlobalCommon.print("binded global service")
+        } else {
+            GlobalCommon.print("binded local service")
+            bindService()
+        }
+
+    }
+
+    private fun bindGlobalService() {
+        val intent = Intent(requireContext(), MetronomeService::class.java)
+       activity?.applicationContext?.bindService(
+            intent,
+            mConnection,
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     private fun bindService() {
@@ -33,7 +54,7 @@ abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickList
                 MetronomeService::class.java
             ), mConnection, Context.BIND_AUTO_CREATE
         )
-        isBound = true
+        isLocalBounded = true
     }
 
     private val mConnection: ServiceConnection = object : ServiceConnection {
@@ -41,23 +62,29 @@ abstract class AbstractMetronomeFragment : Fragment(), MetronomeService.TickList
             GlobalCommon.print("service**** connected***")
             metronomeService = (service as MetronomeService.MetronomeBinder).getService()
             metronomeService?.addTickListener(this@AbstractMetronomeFragment)
+
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
             metronomeService = null
-            isBound = false
+            isLocalBounded = false
             GlobalCommon.print("service**** disconnected***")
-
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (isBound) {
+        GlobalCommon.print("onnnn ddessstroyy")
+       unbindLocalService()
+    }
+
+    private fun unbindLocalService() {
+        if (isLocalBounded) {
             metronomeService?.removeTickListener(this)
+            metronomeService?.pause()
             // Detach our existing connection.
             requireActivity().unbindService(mConnection)
-            isBound = false
+            isLocalBounded = false
         }
     }
 }

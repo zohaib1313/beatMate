@@ -43,11 +43,19 @@ class MetronomeService() : Service() {
     var isPlaying = false
         private set
     private val tickListeners = arrayListOf<TickListener>()
+
     private var tone =
         Tone.WOOD
     private var rhythm =
         Rhythm.QUARTER
     private var emphasis = true
+
+    companion object {
+
+        var metronomeService: MetronomeService? = null
+        val tickGenerator = TickGenerator()
+
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == STOP_SERVICE) {
@@ -59,6 +67,7 @@ class MetronomeService() : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        metronomeService = this@MetronomeService
         Log.i(TAG, "Metronome service created")
         soundPool = SoundPool.Builder()
             .setMaxStreams(4) // to prevent delaying the next tick under any circumstances
@@ -137,6 +146,7 @@ class MetronomeService() : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "Metronome service destroyed")
+        pause()
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -146,6 +156,7 @@ class MetronomeService() : Service() {
     fun play() {
         if (!isPlaying) {
             startForegroundNotification()
+            tickGenerator.startTicking()
             tickJob = coroutineScope.launch(Dispatchers.Default) {
 
 
@@ -172,12 +183,14 @@ class MetronomeService() : Service() {
             }
         } else {
             pause()
+
         }
     }
 
     fun pause() {
         if (isPlaying) {
             tickJob?.cancel()
+            tickGenerator.stopTicking()
             stopForeground(true)
             isPlaying = false
         }
@@ -199,11 +212,11 @@ class MetronomeService() : Service() {
      * @param bpm - the bpm value
      */
     fun setBpm(bpm: Int): Int {
-        if (bpm < MIN_BPM)
-            this.bpm = MIN_BPM
-        else if (bpm > MAX_BPM)
-            this.bpm = MAX_BPM
-        else
+//        if (bpm < MIN_BPM)
+//            this.bpm = MIN_BPM
+//        else if (bpm > MAX_BPM)
+//            this.bpm = MAX_BPM
+//        else
             this.bpm = bpm
         interval = 60000 / (this.bpm * rhythm.value)
         return this.bpm
@@ -288,6 +301,10 @@ class MetronomeService() : Service() {
     interface TickListener {
         fun onTick(interval: Int)
 
+    }
+
+    interface TimeTickerListener {
+        fun onSecondsTick(secondsPassed: Int)
     }
 
 

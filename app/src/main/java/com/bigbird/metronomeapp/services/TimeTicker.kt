@@ -1,25 +1,32 @@
+package com.bigbird.metronomeapp.services
+
 import java.util.*
-import kotlin.concurrent.timerTask
 
-interface TimeTickerListener {
-    fun onSecondsTick(secondsPassed: Int)
-}
+class TickGenerator {
 
-class TimeTicker(private val listener: TimeTickerListener) {
-
+    private var tickValue = 0
     private var timer: Timer? = null
-    private var secondsPassed = 0
-
-    fun start() {
+    private var listener: MetronomeService.TimeTickerListener? = null
+    fun startTicking() {
         timer = Timer()
-        timer?.scheduleAtFixedRate(timerTask {
-            secondsPassed++
-            listener.onSecondsTick(secondsPassed)
+        timer?.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                tickValue++
+                listener?.onSecondsTick(tickValue)
+
+            }
         }, 0, 1000)
     }
 
-    fun stop() {
-        timer?.cancel()
-        secondsPassed = 0
+    fun setTickListener(tickListener: MetronomeService.TimeTickerListener) {
+        listener = tickListener
     }
+
+    fun stopTicking() {
+        timer?.cancel()
+        timer = null
+        tickValue = 0
+    }
+
+
 }

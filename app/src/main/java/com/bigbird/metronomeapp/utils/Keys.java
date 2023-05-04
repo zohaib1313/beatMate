@@ -18,4 +18,6 @@ public class Keys {
     public static final int defaultBpm = 100;
 
     public static final String keyStereoPanning="keyStereoPanning";
+    public static final String keyActiveTempo="keyActiveTempo";
+
 }
