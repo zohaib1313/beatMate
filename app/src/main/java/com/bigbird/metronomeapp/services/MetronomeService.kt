@@ -217,6 +217,7 @@ class MetronomeService() : Service() {
 //        else if (bpm > MAX_BPM)
 //            this.bpm = MAX_BPM
 //        else
+
             this.bpm = bpm
         interval = 60000 / (this.bpm * rhythm.value)
         return this.bpm
