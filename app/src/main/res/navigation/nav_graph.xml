@@ -47,37 +47,6 @@
         tools:layout="@layout/fragment_settings" >
 
     </fragment>
-    <!--    <fragment-->
-    <!--        android:id="@+id/deviceInfoFragment"-->
-    <!--        android:name="analytics.android.pba.views.fragments.deviceInfo.DeviceInfoFragment"-->
-    <!--        android:label="Device Info">-->
-    <!--        <action-->
-    <!--            android:id="@+id/action_deviceInfoFragment_to_appUsageStatesFragment"-->
-    <!--            app:destination="@id/appUsageStatesFragment"-->
-    <!--            />-->
-    <!--        <action-->
-    <!--            android:id="@+id/action_deviceInfoFragment_to_installedApplicationFragment"-->
-    <!--            app:destination="@id/installedApplicationFragment" />-->
-    <!--    </fragment>-->
-    <!--    <fragment-->
-    <!--        android:id="@+id/appUsageStatesFragment"-->
-    <!--        android:name="analytics.android.pba.views.fragments.AppUsageStatesFragment"-->
-    <!--        android:label="App Usage Info">-->
 
-    <!--        <argument-->
-    <!--            android:name="usageState"-->
-    <!--            app:argType="analytics.android.infoPlugin.model.UsageState[]" />-->
-
-    <!--    </fragment>-->
-    <!--    <fragment-->
-    <!--        android:id="@+id/installedApplicationFragment"-->
-    <!--        android:name="analytics.android.pba.views.fragments.InstalledApplicationFragment"-->
-    <!--        android:label="Installed App Info" >-->
-
-    <!--        <argument-->
-    <!--            android:name="installedApplications"-->
-    <!--            app:argType="analytics.android.infoPlugin.model.InstalledApplicationInfo[]" />-->
-
-    <!--    </fragment>-->
 
 </navigation>

@@ -134,6 +134,7 @@
                 app:layout_constraintTop_toTopOf="@+id/ivAddTempoValue" />
 
             <SeekBar
+                android:layout_marginTop="@dimen/_8sdp"
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -246,10 +247,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout4"
-
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:paddingTop="@dimen/_30sdp"
             android:theme="@style/Theme.MetronomeApp"
             app:layout_constraintBottom_toBottomOf="parent"
