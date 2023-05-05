@@ -25,7 +25,7 @@
         android:layout_gravity="center"
         android:gravity="start"
         android:text="@string/welcome_to_beatmate"
-        android:textSize="@dimen/_30ssp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.17" />
 
 
     <TextView
@@ -43,6 +43,7 @@
         style="@style/normal_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
         android:gravity="start"
         android:text="@string/improve_your_timing_and_stay_on_beat_easily_tailor_the_metronome_to_your_needs_and_keep_your_pace_steady"
         android:textSize="@dimen/_16ssp"
@@ -53,23 +54,25 @@
     <Button
         android:id="@+id/button"
         style="@style/buttonStyle"
-        android:background="@drawable/rounded_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10sdp"
-
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/rounded_button"
         android:text="Continue"
+        android:textAllCaps="false"
+        android:padding="16dp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
-        app:layout_constraintStart_toStartOf="@+id/textView2" />
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -95,12 +95,12 @@ class MetronomeService() : Service() {
 
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, 0)
+                PendingIntent.getActivity(this, 0, notificationIntent,PendingIntent.FLAG_IMMUTABLE )
             }
         val stopSelf = Intent(this, MetronomeService::class.java)
         stopSelf.action = STOP_SERVICE
         val pStopSelf =
-            PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT)
+            PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_IMMUTABLE)
         val stopAction = Notification.Action.Builder(
             Icon.createWithResource(
                 this,

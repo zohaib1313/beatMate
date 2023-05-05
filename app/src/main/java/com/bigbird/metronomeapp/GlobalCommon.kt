@@ -16,9 +16,9 @@ class GlobalCommon {
             val remainingSeconds = seconds % 60
 
             return if (hours > 0) {
-                String.format("%dH:%02dM:%02dS", hours, minutes, remainingSeconds)
+                String.format("%dH:%01d:%02d", hours, minutes, remainingSeconds)
             } else {
-                String.format("%02dM :%02dS", minutes, remainingSeconds)
+                String.format("%01d:%02d", minutes, remainingSeconds)
             }
         }
     }

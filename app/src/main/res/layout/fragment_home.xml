@@ -21,16 +21,17 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
         android:id="@+id/mainLayout"
-        android:theme="@style/Theme.MetronomeApp"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/Theme.MetronomeApp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/_30sdp"
             android:theme="@style/Theme.MetronomeApp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,12 +58,12 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Beatmate"
-                    android:textSize="@dimen/_24sdp" />
+                    android:textSize="@dimen/_22sdp" />
 
                 <ImageButton
                     android:id="@+id/btnSettings"
-                    android:layout_width="@dimen/_26sdp"
-                    android:layout_height="@dimen/_26sdp"
+                    android:layout_width="@dimen/_22sdp"
+                    android:layout_height="@dimen/_22sdp"
                     android:background="@drawable/baseline_settings_24" />
 
             </LinearLayout>
@@ -137,8 +138,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:max="200"
-                android:min="1"
                 android:maxHeight="@dimen/_4sdp"
+                android:min="1"
                 android:minHeight="@dimen/_4sdp"
                 android:progress="@{Integer.valueOf(tempoValue)}"
                 android:progressDrawable="@drawable/custom_seekbar"
@@ -172,7 +173,6 @@
                     android:layout_marginVertical="@dimen/_8sdp"
                     android:gravity="center"
                     android:text="- 5"
-
                     android:textSize="@dimen/_16sdp" />
 
 
@@ -291,7 +291,8 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_45sdp"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:background="@drawable/rounded_corners"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:foreground="@drawable/rounded_corners"
                 android:gravity="center"
                 android:orientation="horizontal"
 
@@ -314,7 +315,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_4sdp"
-                    android:text="0:0" />
+                    android:text="0:0"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -323,9 +325,9 @@
                 android:layout_height="@dimen/_45sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@drawable/rounded_corners"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:orientation="horizontal"
-
                 android:padding="@dimen/_4sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -346,7 +348,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="@dimen/_4sdp"
-                    android:text="Tap Tempo" />
+                    android:text=" Tap\n Tempo"
+                    android:textStyle="bold" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,9 +6,10 @@
     </style>
 
 
-    <style name="buttonStyle" parent="">
+    <style name="buttonStyle" parent="normal_text_style">
         <item name="backgroundTint">@color/black</item>
         <item name="android:textColor">@color/black</item>
+
     </style>
 
     <style name="MyButtonShapeAppearance" parent="Widget.MaterialComponents.Button">

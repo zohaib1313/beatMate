@@ -8,4 +8,5 @@
     <string name="welcome_to_beatmate">Welcome to Beatmate</string>
     <string name="notification_title">App running</string>
     <string name="notification_message">running....</string>
+    <string name="background_play">Background Play</string>
 </resources>
