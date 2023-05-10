@@ -2,8 +2,11 @@ package com.bigbird.metronomeapp
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,7 @@ import com.bigbird.metronomeapp.services.SharedViewModel
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
 import com.bigbird.metronomeapp.utils.MySharedPreferences
+import com.google.android.play.core.review.ReviewManagerFactory
 
 class SettingsFragment : Fragment() {
 
@@ -47,6 +51,7 @@ class SettingsFragment : Fragment() {
     }
 
 
+    @SuppressLint("QueryPermissionsNeeded")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* metronomeService?.setVolume(0.0f, 0.0f)
@@ -74,7 +79,44 @@ class SettingsFragment : Fragment() {
 
         //steroPaning
         setupStereoPanning()
+
+
+        val reviewManager = ReviewManagerFactory.create(requireContext())
+
+        binding.btnRateUs.setOnClickListener {
+            val request = reviewManager.requestReviewFlow()
+            Log.d("loooogg", "On Click");
+
+            request.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val reviewInfo = task.result
+                    // Use the ReviewInfo object to display the review dialog
+                    reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
+                        .addOnFailureListener { e ->
+
+                            Log.d("loooogg", "review not enabled");
+                            // Handle error
+                        }
+                } else {
+                    Log.d("loooogg", "review not enabled2");
+
+                    // Handle error
+                }
+            }.addOnFailureListener {
+                Log.d("loooogg", "review not started ${it.toString()}");
+
+            }
+        }
+
+        binding.button.setOnClickListener {
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:support@beatmate.com")
+            }
+            startActivity(Intent.createChooser(emailIntent, "Feedback"))
+        }
     }
+
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setupStereoPanning() {

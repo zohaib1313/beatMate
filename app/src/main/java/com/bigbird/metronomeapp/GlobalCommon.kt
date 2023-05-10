@@ -7,7 +7,7 @@ class GlobalCommon {
     companion object {
 
         fun print(value: String) {
-            Log.d("****MYTAG***", value)
+            Log.d("****intervalll***", value)
         }
 
         fun formatTime(seconds: Int): String {

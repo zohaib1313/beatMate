@@ -12,7 +12,7 @@
 
     </style>
 
-    <style name="MyButtonShapeAppearance" parent="Widget.MaterialComponents.Button">
+    <style name="MyButtonShapeAppearance" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">100%</item>
 

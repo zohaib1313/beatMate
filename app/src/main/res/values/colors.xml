@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_a">#B79EFF</color>
-    <color name="purple_b">#80B79EFF</color>
+    <color name="purple_b">#80BFA8FF</color>
 
 
     <color name="silver_a">#C9D5FF</color>
-    <color name="silver_b">#80C9D5FF</color>
+    <color name="silver_b">#E4EAFF</color>
 
 
     <color name="green_a">#9EFFAE</color>
-    <color name="green_b">#809EFFAE</color>
+    <color name="green_b">#CFFFD6</color>
     <color name="transparent">#00854646</color>
 
     <color name="pink_a">#FFC9E9</color>
-    <color name="pink_b">#80FFC9E9</color>
+    <color name="pink_b">#FFE4F4</color>
 
     <color name="black">#000000</color>
     <color name="light_blue_600">#FF039BE5</color>

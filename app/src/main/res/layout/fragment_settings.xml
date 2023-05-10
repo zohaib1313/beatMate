@@ -143,10 +143,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_14sdp"
-                android:maxHeight="@dimen/_4sdp"
-                android:minHeight="@dimen/_4sdp"
                 android:max="100"
+                android:maxHeight="@dimen/_4sdp"
                 android:min="0"
+                android:minHeight="@dimen/_4sdp"
                 android:progress="50"
 
                 android:progressDrawable="@drawable/seekbar_track_custom"
@@ -335,7 +335,7 @@
 
 
             <Button
-
+             android:id="@+id/btnRateUs"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_14sdp"

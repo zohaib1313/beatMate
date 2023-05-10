@@ -48,7 +48,7 @@ class MetronomeService() : Service() {
         Tone.WOOD
     private var rhythm =
         Rhythm.QUARTER
-    private var emphasis = true
+    private var emphasis = false
 
     companion object {
 
@@ -95,7 +95,7 @@ class MetronomeService() : Service() {
 
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent,PendingIntent.FLAG_IMMUTABLE )
+                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
         val stopSelf = Intent(this, MetronomeService::class.java)
         stopSelf.action = STOP_SERVICE
@@ -153,13 +153,12 @@ class MetronomeService() : Service() {
         return binder
     }
 
-    fun play() {
+
+ /*   fun play() {
         if (!isPlaying) {
             startForegroundNotification()
             tickGenerator.startTicking()
             tickJob = coroutineScope.launch(Dispatchers.Default) {
-
-
                 isPlaying = true
                 var tick = 0
                 while (isPlaying && isActive) {
@@ -186,6 +185,83 @@ class MetronomeService() : Service() {
 
         }
     }
+*/
+    fun play() {
+        if (!isPlaying) {
+            startForegroundNotification()
+            tickGenerator.startTicking()
+
+            // Get the current time
+            var currentTime = System.currentTimeMillis()
+            var lastTickTime = System.currentTimeMillis()
+            tickJob = coroutineScope.launch(Dispatchers.Default) {
+
+
+                isPlaying = true
+                var tick = 0
+
+                while (isPlaying && isActive) {
+                    // Set the tick interval to 1 second
+                    val tickInterval = interval.toLong()
+
+                    // Calculate the next tick time by adding the tick interval to the current time
+                    var nextTickTime = currentTime + tickInterval
+
+                    var rate = rate
+
+                    // Calculate the time to wait until the next tick
+                    val waitTime = nextTickTime - System.currentTimeMillis()
+
+                    // Wait until the next tick time
+                    if (waitTime > 0) {
+                        try {
+                            // Use a busy loop to avoid the delay function adding any additional delay
+                            while (System.currentTimeMillis() < nextTickTime) {
+                                continue
+                            }
+                        } catch (e: InterruptedException) {
+                            return@launch
+                        }
+                    }
+
+                    // Update the current time
+                    currentTime = System.currentTimeMillis()
+
+                    // Calculate the time difference between ticks in seconds
+                    val timeDiff = (currentTime - lastTickTime) / 1000.0
+
+                    Log.d("Time difference: ", "${timeDiff} s")
+
+                    lastTickTime = currentTime
+
+                    // Trigger tick event listeners
+                    if (tick % rhythm.value == 0) {
+                        for (t in tickListeners)
+                            t.onTick(tickInterval.toInt())
+                        if (emphasis && tick == 0)
+                            rate = 1.4f
+                    }
+
+                    // Play the sound
+                    if (isPlaying) {
+                        soundPool.play(tone.value, leftVolume, rightVolume, 1, 0, rate)
+                    }
+
+                    // Increment the tick counter
+                    if (tick < beatsPerMeasure * rhythm.value - 1)
+                        tick++
+                    else
+                        tick = 0
+
+                    // Calculate the next tick time
+                    nextTickTime += tickInterval
+                }
+            }
+        } else {
+            pause()
+        }
+    }
+
 
     fun pause() {
         if (isPlaying) {
@@ -218,7 +294,7 @@ class MetronomeService() : Service() {
 //            this.bpm = MAX_BPM
 //        else
 
-            this.bpm = bpm
+        this.bpm = bpm
         interval = 60000 / (this.bpm * rhythm.value)
         return this.bpm
     }

@@ -1,7 +1,6 @@
 package com.bigbird.metronomeapp.fragments
 
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -147,9 +146,15 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
         }
 
+
+        setPlayButtonDrawable(activeTheme, true)
         metronomeService?.isPlaying?.let {
+
+            GlobalCommon.print("playing $it  ${activeTheme}")
             if (it) {
-                binding.btnPlay.setImageResource(R.drawable.stop_arrow)
+                setPlayButtonDrawable(activeTheme, false)
+            } else {
+                setPlayButtonDrawable(activeTheme, true)
             }
         }
 
@@ -159,7 +164,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
             metronomeService?.isPlaying?.let {
                 if (it) {
                     binding.beatsView.resetBeats(true)
-                    binding.btnPlay.setImageResource(R.drawable.play_arrow)
+                    setPlayButtonDrawable(activeTheme, true)
 
                     metronomeService?.pause()
 
@@ -181,7 +186,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
                 } else {
                     binding.beatsView.resetBeats(true)
-                    binding.btnPlay.setImageResource(R.drawable.stop_arrow)
+                    setPlayButtonDrawable(activeTheme, false)
                     metronomeService?.play()
                     setupTempo()
 
@@ -211,7 +216,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
         setInitialTheme(activeTheme)
 
 
-        binding.llTempoTap.setOnClickListener {
+        binding.roundedButton.setOnClickListener {
             tapCount++
             val currentTime = System.currentTimeMillis()
             if (tapCount == 1) {
@@ -270,7 +275,6 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
         when (activeColor) {
 
             Colors.White.name -> {
-                changeButtonColors(color = R.color.white)
                 binding.mainLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -279,7 +283,6 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
                 )
             }
             Colors.Purple.name -> {
-                changeButtonColors(color = R.color.purple_a)
                 binding.mainLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -290,7 +293,6 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
             }
             Colors.Silver.name -> {
-                changeButtonColors(color = R.color.silver_a)
                 binding.mainLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -300,7 +302,6 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
             }
             Colors.Green.name -> {
-                changeButtonColors(color = R.color.green_a)
                 binding.mainLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -311,7 +312,6 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
             }
             Colors.Pink.name -> {
-                changeButtonColors(color = R.color.pink_a)
 
                 binding.mainLayout.setBackgroundColor(
                     ContextCompat.getColor(
@@ -326,23 +326,62 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
     }
 
-    private fun changeButtonColors(color: Int) {
-        ColorStateList.valueOf(
-            ContextCompat.getColor(requireContext(), color)
-        ).let {
-            binding.ivRemoveTempoValue.backgroundTintList = it
-            binding.ivAddTempoValue.backgroundTintList = it
-            binding.removeFive.backgroundTintList = it
-            binding.divideTwo.backgroundTintList = it
-            binding.multiplyTwo.backgroundTintList = it
-            binding.addFive.backgroundTintList = it
+    private fun setPlayButtonDrawable(activeColor: String, play: Boolean) {
+        when (activeColor) {
+
+            Colors.White.name -> {
+
+                if (play) {
+                    binding.btnPlay.setImageResource(R.drawable.play_arrow_white)
+                } else {
+                    binding.btnPlay.setImageResource(R.drawable.stop_arrow_white)
+
+                }
+            }
+            Colors.Purple.name -> {
+                if (play) {
+                    binding.btnPlay.setImageResource(R.drawable.play_arrow_purple)
+                } else {
+                    binding.btnPlay.setImageResource(R.drawable.stop_arrow_purple)
+
+                }
 
 
+            }
+            Colors.Silver.name -> {
+                if (play) {
+                    binding.btnPlay.setImageResource(R.drawable.play_arrow_silver)
+                } else {
+                    binding.btnPlay.setImageResource(R.drawable.stop_arrow_silver)
+
+                }
+
+            }
+            Colors.Green.name -> {
+                if (play) {
+                    binding.btnPlay.setImageResource(R.drawable.play_arrow_green)
+                } else {
+                    binding.btnPlay.setImageResource(R.drawable.stop_arrow_green)
+
+                }
+
+
+            }
+            Colors.Pink.name -> {
+
+                if (play) {
+                    binding.btnPlay.setImageResource(R.drawable.play_arrow_pink)
+                } else {
+                    binding.btnPlay.setImageResource(R.drawable.stop_arrow_pink)
+
+                }
+
+            }
         }
     }
 
-
     override fun onTick(interval: Int) {
+        GlobalCommon.print(interval.toString())
         if (this.isVisible && isAdded && metronomeService?.isPlaying == true) {
             activity?.runOnUiThread { binding.beatsView.nextBeat() }
             activity?.runOnUiThread {
