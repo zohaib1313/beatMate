@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.R
 import com.bigbird.metronomeapp.databinding.FragmentSplashBinding
-import java.util.*
-import kotlin.concurrent.schedule
+import com.bigbird.metronomeapp.utils.Keys
+import com.bigbird.metronomeapp.utils.MySharedPreferences
 
 
 class SplashFragment : Fragment() {
@@ -32,10 +31,18 @@ class SplashFragment : Fragment() {
 
     }
 
+    private var isWelcomeScreenShown: String = "true"
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        isWelcomeScreenShown =
+            MySharedPreferences(requireContext()).getValue(
+                key = Keys.keyIsWelcomeScreenShown,
+                "false"
+            )
+                .toString()
 
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -46,10 +53,22 @@ class SplashFragment : Fragment() {
                     true
                 ) // remove the previous fragment from the back stack
                 .build()
-            findNavController().navigate(
-                SplashFragmentDirections.actionSplashFragmentToWelcomeFragment2(),
-                navOptions = navOptions
-            )
+            if (isWelcomeScreenShown == "true") {
+                findNavController().navigate(
+                    SplashFragmentDirections.actionSplashFragmentToHomeFragment(),
+                    navOptions = navOptions
+                )
+            } else {
+                MySharedPreferences(requireContext()).setValue(
+                    key = Keys.keyIsWelcomeScreenShown,
+                    "true"
+                )
+                findNavController().navigate(
+                    SplashFragmentDirections.actionSplashFragmentToWelcomeFragment2(),
+                    navOptions = navOptions
+                )
+            }
+
 
         }, 2000)
     }

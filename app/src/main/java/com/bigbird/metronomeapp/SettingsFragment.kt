@@ -46,6 +46,8 @@ class SettingsFragment : Fragment() {
 
 
 
+        binding.switchColorFlash.isChecked=false
+        binding.switchBgPlay.isChecked=false
         return binding.root
 
     }
@@ -61,6 +63,7 @@ class SettingsFragment : Fragment() {
         binding.ivBack.setOnClickListener {
             findNavController().popBackStack()
         }
+
         ///flash setup
         setupFlash()
 

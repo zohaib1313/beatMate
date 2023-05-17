@@ -1,22 +1,24 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56">
 
-  <item >
-    <shape android:shape="oval">
-      <corners android:radius="20dp" />
-      <solid android:color="@color/black" />
-    </shape>
-  </item>
-
-  <item android:top="4dp" android:right="4dp" android:left="4dp" android:bottom="4dp">
-    <shape android:shape="oval">
-      <solid android:color="@android:color/white" />
-      <size android:height="32dp" android:width="32dp" />
-    </shape>
-  </item>
-  <item android:top="8dp" android:right="8dp" android:left="8dp" android:bottom="8dp">
-    <shape android:shape="oval">
-      <solid android:color="@color/black" />
-      <size android:height="30dp" android:width="30dp" />
-    </shape>
-  </item>
-</layer-list>
+    <group>
+        <clip-path android:pathData="M56 28C56 43.464 43.464 56 28 56C12.536 56 0 43.464 0 28C0 12.536 12.536 0 28 0C43.464 0 56 12.536 56 28Z" />
+        <path
+            android:pathData="M56 28C56 43.464 43.464 56 28 56C12.536 56 0 43.464 0 28C0 12.536 12.536 0 28 0C43.464 0 56 12.536 56 28Z"
+            android:strokeWidth="8"
+            android:strokeColor="#000000"
+            android:fillColor="@color/transparent"
+      />
+    </group>
+    <group
+        android:translateX="12"
+        android:translateY="12">
+        <clip-path android:pathData="M32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16Z" />
+        <path
+            android:fillColor="#1A000000"
+            android:pathData="M0 0V32H32V0" />
+    </group>
+</vector>

@@ -69,15 +69,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:translationZ="-1dp"
                 android:id="@+id/linearLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/_25sdp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:translationZ="-1dp"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -85,8 +86,9 @@
                 <view
                     android:id="@+id/beatsView"
                     class="com.bigbird.metronomeapp.views.BeatsView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:antialias="true"
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
@@ -285,19 +287,13 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayoutMain"
             app:layout_constraintVertical_bias="1.0">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.3" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.7" />
+                app:layout_constraintGuide_percent="0.5" />
 
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -306,18 +302,19 @@
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
                 android:layout_marginTop="@dimen/_20sdp"
+
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/play_arrow_white"
                 app:layout_constraintEnd_toStartOf="@+id/guideline10"
-                app:layout_constraintStart_toStartOf="@+id/guideline9"
+                app:layout_constraintStart_toStartOf="@+id/guideline10"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <LinearLayout
                 android:id="@+id/linearLayout5"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/_90sdp"
                 android:layout_height="@dimen/_45sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginHorizontal="@dimen/_16sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:foreground="@drawable/rounded_corners"
                 android:gravity="center"
@@ -325,8 +322,7 @@
 
                 android:padding="@dimen/_4sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
-                app:layout_constraintEnd_toStartOf="@+id/guideline9"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnPlay"
                 app:layout_constraintTop_toTopOf="@+id/btnPlay">
 
                 <ImageView
@@ -343,14 +339,16 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_4sdp"
                     android:text="0:0"
+                    android:textSize="18sp"
+
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llTempoTap"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/_90sdp"
                 android:layout_height="@dimen/_45sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginHorizontal="@dimen/_16sdp"
                 android:background="@drawable/rounded_corners"
                 android:clipChildren="true"
                 android:clipToPadding="true"
@@ -358,8 +356,7 @@
                 android:orientation="horizontal"
 
                 app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline10"
+                app:layout_constraintStart_toEndOf="@+id/btnPlay"
                 app:layout_constraintTop_toTopOf="@+id/btnPlay">
 
                 <com.google.android.material.button.MaterialButton
@@ -371,6 +368,7 @@
                     android:text="Tap\nTempo"
                     android:textAlignment="textStart"
                     android:textAllCaps="false"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:icon="@drawable/touch_app"
                     app:iconPadding="8dp"

@@ -149,7 +149,7 @@
                 android:minHeight="@dimen/_4sdp"
                 android:progress="50"
 
-                android:progressDrawable="@drawable/seekbar_track_custom"
+                android:progressDrawable="@drawable/seekbar_white"
                 android:splitTrack="false"
                 android:thumb="@drawable/custom_thumb"
                 app:layout_constraintEnd_toEndOf="@+id/seekBarVolume"
@@ -276,15 +276,16 @@
                 app:layout_constraintStart_toStartOf="@+id/ivTimePicker"
                 app:layout_constraintTop_toBottomOf="@+id/ivTimePicker" />
 
-            <Switch
+           <Switch
                 android:id="@+id/switchColorFlash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_14sdp"
-                android:scaleX="0.65"
-                android:scaleY="0.75"
-                android:thumb="@drawable/switch_thumb_toogle"
-                android:track="@drawable/toogle_track"
+               android:scaleX="0.7"
+               android:scaleY="0.8"
+               android:checked="false"
+               android:thumb="@drawable/switch_thumb_toogle"
+               android:track="@drawable/toogle_track"
                 app:layout_constraintBottom_toBottomOf="@+id/textView12"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView12"
@@ -311,8 +312,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_14sdp"
-                android:scaleX="0.65"
-                android:scaleY="0.75"
+                android:scaleX="0.7"
+                android:scaleY="0.8"
+                android:checked="true"
+
                 android:thumb="@drawable/switch_thumb_toogle"
                 android:track="@drawable/toogle_track"
                 app:layout_constraintBottom_toBottomOf="@+id/textView13"

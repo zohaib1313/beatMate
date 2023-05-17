@@ -9,6 +9,7 @@ import android.media.SoundPool
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.bigbird.metronomeapp.GlobalCommon
 import com.bigbird.metronomeapp.MainActivity
 import com.bigbird.metronomeapp.R
 import kotlinx.coroutines.*
@@ -39,7 +40,7 @@ class MetronomeService() : Service() {
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     var bpm = 100
     private var beatsPerMeasure = 4
-    private var interval = 600
+    private var interval = 60000.0 / (this.bpm * 1)
     var isPlaying = false
         private set
     private val tickListeners = arrayListOf<TickListener>()
@@ -48,7 +49,7 @@ class MetronomeService() : Service() {
         Tone.WOOD
     private var rhythm =
         Rhythm.QUARTER
-    private var emphasis = false
+    private var emphasis = true
 
     companion object {
 
@@ -70,7 +71,7 @@ class MetronomeService() : Service() {
         metronomeService = this@MetronomeService
         Log.i(TAG, "Metronome service created")
         soundPool = SoundPool.Builder()
-            .setMaxStreams(4) // to prevent delaying the next tick under any circumstances
+            .setMaxStreams(1) // to prevent delaying the next tick under any circumstances
             .setAudioAttributes(
                 AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
@@ -79,10 +80,8 @@ class MetronomeService() : Service() {
             )
             .build()
 
-        soundPool.load(this, R.raw.clickk, 1)
-        /*       soundPool.load(this, R.raw.ding, 1)
-               soundPool.load(this, R.raw.beep, 1)
-        */
+        soundPool.load(this, R.raw.bclick1, 1)
+
     }
 
     // Notification for enabling a foreground service
@@ -154,54 +153,54 @@ class MetronomeService() : Service() {
     }
 
 
- /*   fun play() {
-        if (!isPlaying) {
-            startForegroundNotification()
-            tickGenerator.startTicking()
-            tickJob = coroutineScope.launch(Dispatchers.Default) {
-                isPlaying = true
-                var tick = 0
-                while (isPlaying && isActive) {
-                    var rate = rate
-                    delay(interval.toLong())
-                    if (tick % rhythm.value == 0) {
-                        for (t in tickListeners)
-                            t.onTick(interval)
-                        if (emphasis && tick == 0)
-                            rate = 1.4f
-                    }
-                    if (isPlaying) {
-                        soundPool.play(tone.value, leftVolume, rightVolume, 1, 0, rate)
+    /*   fun play() {
+           if (!isPlaying) {
+               startForegroundNotification()
+               tickGenerator.startTicking()
+               tickJob = coroutineScope.launch(Dispatchers.Default) {
+                   isPlaying = true
+                   var tick = 0
+                   while (isPlaying && isActive) {
+                       var rate = rate
+                       delay(interval.toLong())
+                       if (tick % rhythm.value == 0) {
+                           for (t in tickListeners)
+                               t.onTick(interval)
+                           if (emphasis && tick == 0)
+                               rate = 1.4f
+                       }
+                       if (isPlaying) {
+                           soundPool.play(tone.value, leftVolume, rightVolume, 1, 0, rate)
 
-                    }
-                    if (tick < beatsPerMeasure * rhythm.value - 1)
-                        tick++
-                    else
-                        tick = 0
-                }
-            }
-        } else {
-            pause()
+                       }
+                       if (tick < beatsPerMeasure * rhythm.value - 1)
+                           tick++
+                       else
+                           tick = 0
+                   }
+               }
+           } else {
+               pause()
 
-        }
-    }
-*/
+           }
+       }
+   */
+
     fun play() {
         if (!isPlaying) {
-            startForegroundNotification()
-            tickGenerator.startTicking()
+            soundPool.play(1, 0f, 0f, 1, 0, rate)
 
-            // Get the current time
+            tickGenerator.startTicking()
+            isPlaying = true
+
+            var tick = 0
             var currentTime = System.currentTimeMillis()
-            var lastTickTime = System.currentTimeMillis()
+            var lastTickTime = currentTime
+
             tickJob = coroutineScope.launch(Dispatchers.Default) {
 
-
-                isPlaying = true
-                var tick = 0
-
                 while (isPlaying && isActive) {
-                    // Set the tick interval to 1 second
+                    GlobalCommon.print("xxxxx $bpm");
                     val tickInterval = interval.toLong()
 
                     // Calculate the next tick time by adding the tick interval to the current time
@@ -210,10 +209,9 @@ class MetronomeService() : Service() {
                     var rate = rate
 
                     // Calculate the time to wait until the next tick
-                    val waitTime = nextTickTime - System.currentTimeMillis()
+                    val waitTime = nextTickTime - currentTime
 
-                    // Wait until the next tick time
-                    if (waitTime > 0) {
+                    if (waitTime > 0.0) {
                         try {
                             // Use a busy loop to avoid the delay function adding any additional delay
                             while (System.currentTimeMillis() < nextTickTime) {
@@ -230,21 +228,26 @@ class MetronomeService() : Service() {
                     // Calculate the time difference between ticks in seconds
                     val timeDiff = (currentTime - lastTickTime) / 1000.0
 
-                    Log.d("Time difference: ", "${timeDiff} s")
+                    Log.d("Time difference: ", "$timeDiff s")
 
                     lastTickTime = currentTime
+                    // Calculate the next tick time
+                    nextTickTime += tickInterval
+
 
                     // Trigger tick event listeners
                     if (tick % rhythm.value == 0) {
                         for (t in tickListeners)
-                            t.onTick(tickInterval.toInt())
-                        if (emphasis && tick == 0)
+                            t.onTick(tick)
+                        if (emphasis && tick == 0 )
                             rate = 1.4f
                     }
 
                     // Play the sound
                     if (isPlaying) {
-                        soundPool.play(tone.value, leftVolume, rightVolume, 1, 0, rate)
+                        GlobalCommon.print("tick----=$tick")
+                        soundPool.play(1, leftVolume, rightVolume, 1, 0, rate)
+
                     }
 
                     // Increment the tick counter
@@ -253,10 +256,10 @@ class MetronomeService() : Service() {
                     else
                         tick = 0
 
-                    // Calculate the next tick time
-                    nextTickTime += tickInterval
+
                 }
             }
+            startForegroundNotification()
         } else {
             pause()
         }
@@ -295,7 +298,7 @@ class MetronomeService() : Service() {
 //        else
 
         this.bpm = bpm
-        interval = 60000 / (this.bpm * rhythm.value)
+        interval = 60000.0 / (this.bpm * rhythm.value)
         return this.bpm
     }
 

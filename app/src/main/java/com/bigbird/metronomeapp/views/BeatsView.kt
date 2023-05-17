@@ -1,10 +1,12 @@
 package com.bigbird.metronomeapp.views
 
 import android.content.Context
+import android.graphics.BlendMode
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
@@ -33,7 +35,7 @@ class BeatsView @JvmOverloads constructor(
     private val firstEmptyCircle =
         ContextCompat.getDrawable(context, R.drawable.rounded_holo)
     private val firstFullCircle =
-        ContextCompat.getDrawable(context, R.drawable.rounded_button_selected)
+        ContextCompat.getDrawable(context, R.drawable.active_beat)
     private val firstEmptyCircleNoEmphasis =
         ContextCompat.getDrawable(context, R.drawable.rounded_holo)
     private val firstFullCircleNoEmphasis =
@@ -41,13 +43,16 @@ class BeatsView @JvmOverloads constructor(
     private val offCircle =
         ContextCompat.getDrawable(context, R.drawable.rounded_holo)
     private val emptyCircle = ContextCompat.getDrawable(context, R.drawable.rounded_holo)
-    private val fullCircle = ContextCompat.getDrawable(context, R.drawable.rounded_button_selected)
+    private val fullCircle = ContextCompat.getDrawable(context, R.drawable.active_beat)
     private val marginParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+
 
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER
-        marginParams.setMargins(30, 5, 30, 5)
+        marginParams.setMargins(40, 0, 40, 0)
+        marginParams.width = 100
+        // marginParams.height=120
         createBeats()
     }
 
@@ -57,30 +62,42 @@ class BeatsView @JvmOverloads constructor(
             val drawable = getCircleDrawable(i, false)
             imageView.setImageDrawable(drawable)
             imageView.layoutParams = marginParams
+            imageView.clipToOutline=false
+
+
             addView(imageView)
         }
     }
 
-    fun nextBeat() {
-        if (highlightedBeat != -1) {
-            val prevBeat = getChildAt(highlightedBeat) as ImageView
-            val pervBeatIndex = highlightedBeat
-            if (highlightedBeat == beatsPerMeasure - 1)
-                highlightedBeat = 0
-            else
-                highlightedBeat++
-            val currentBeat = getChildAt(highlightedBeat) as ImageView
-            prevBeat.setImageDrawable(getCircleDrawable(pervBeatIndex, false))
-            currentBeat.setImageDrawable(getCircleDrawable(highlightedBeat, true))
-        } else {
-            highlightedBeat++
-            val currentBeat = getChildAt(highlightedBeat) as ImageView
-            currentBeat.setImageDrawable(getCircleDrawable(highlightedBeat, true))
+    fun nextBeat(tick: Int) {
+        for (i in 0 until MAX_BEAT) {
+            val beatsViews = getChildAt(i) as ImageView
+            if (i == tick) {
+                animateImageChange(imageView = beatsViews, newDrawable = fullCircle)
+               // beatsViews.setImageDrawable(fullCircle)
+            } else {
+               // beatsViews.setImageDrawable(emptyCircle)
+                  animateImageChange(imageView = beatsViews, newDrawable = emptyCircle)
+            }
+
         }
     }
 
+    private fun animateImageChange(imageView: ImageView, newDrawable: Drawable?) {
+        imageView.adjustViewBounds = true
+        imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        val paint = Paint().apply {
+            isAntiAlias = true
+            isDither = true
+        }
+
+
+        imageView.setLayerPaint(paint)
+        imageView.setImageDrawable(newDrawable)
+    }
+
     private fun getCircleDrawable(beatIndex: Int, isFull: Boolean): Drawable? {
-        Log.d("BEATS", "i: $beatIndex, full: $isFull")
+
         return when (beatIndex) {
             0 -> when (isEmphasis) {
                 true -> if (isFull) firstFullCircle else firstEmptyCircle

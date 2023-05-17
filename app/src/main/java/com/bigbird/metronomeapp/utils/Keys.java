@@ -20,4 +20,6 @@ public class Keys {
     public static final String keyStereoPanning="keyStereoPanning";
     public static final String keyActiveTempo="keyActiveTempo";
 
+
+    public static final String keyIsWelcomeScreenShown="keyIsWelcomeScreenShown";
 }

@@ -19,6 +19,7 @@ import com.bigbird.metronomeapp.services.MetronomeService
 import com.bigbird.metronomeapp.services.MetronomeService.Companion.metronomeService
 import com.bigbird.metronomeapp.services.MetronomeService.Companion.tickGenerator
 import com.bigbird.metronomeapp.services.SharedViewModel
+import com.bigbird.metronomeapp.services.TempoTap
 import com.bigbird.metronomeapp.utils.AppUtils
 import com.bigbird.metronomeapp.utils.Colors
 import com.bigbird.metronomeapp.utils.Keys
@@ -185,10 +186,13 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
                     )
 
                 } else {
+
+                    setUpStereo()
+                    setupTempo()
                     binding.beatsView.resetBeats(true)
                     setPlayButtonDrawable(activeTheme, false)
                     metronomeService?.play()
-                    setupTempo()
+
 
                 }
 
@@ -215,29 +219,40 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
         setInitialTheme(activeTheme)
 
-
+        val tempoTap = TempoTap()
         binding.roundedButton.setOnClickListener {
-            tapCount++
-            val currentTime = System.currentTimeMillis()
-            if (tapCount == 1) {
-                lastTapTime = currentTime.toDouble()
-            } else {
-                val duration = currentTime - lastTapTime
-                totalDuration += duration
-                lastTapTime = currentTime.toDouble()
-                if (tapCount == 5) {
-                    val averageDuration = totalDuration / 4
-                    val averageSeconds = (averageDuration / 1000)
-                    val bpm = ((60.0) / averageSeconds).toInt()
-                    Log.d("Tap Timing", "Average duration: $averageSeconds s")
-                    Log.d("Tap Timing", "BPM: $bpm")
-
-                    binding.tempoValue = bpm.toString()
-
-                    tapCount = 0
-                    totalDuration = 0.0
-                }
+            tempoTap.tap()
+            val bpm = tempoTap.calculateBPM()
+            if (bpm != -1) {
+                binding.tempoValue = bpm.toString()
+                Log.d("Tap Timing", "BPM: $bpm")
+                tempoTap.reset(hard = false)
             }
+            //   tapCount++
+//            val currentTime = System.currentTimeMillis()
+//            if (tapCount == 1) {
+//                lastTapTime = currentTime.toDouble()
+//            } else {
+//                val duration = currentTime - lastTapTime
+//                totalDuration += duration
+//                lastTapTime = currentTime.toDouble()
+//                val averageDuration = totalDuration / tapCount
+//                val averageSeconds = (averageDuration / 1000)
+//                var bpm = ((60.0) / averageSeconds).toInt()
+//                Log.d("Tap Timing", "Average duration: $averageSeconds s")
+//                Log.d("Tap Timing", "BPM: $bpm")
+//                if (bpm > Keys.maxProgress) {
+//                    bpm = 300
+//                    binding.tempoValue = bpm.toString()
+//                } else {
+//                    binding.tempoValue = bpm.toString()
+//                }
+//
+//                if (tapCount == 4) {
+//                    tapCount = 0
+//                    totalDuration = 0.0
+//                }
+            ///          }
 
         }
 
@@ -316,7 +331,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
                 binding.mainLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.purple_b
+                        R.color.pink_b
                     )
                 )
 
@@ -380,10 +395,10 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
         }
     }
 
-    override fun onTick(interval: Int) {
-        GlobalCommon.print(interval.toString())
+    override fun onTick(tick: Int) {
+        GlobalCommon.print("ticckkk==${tick.toString()}")
         if (this.isVisible && isAdded && metronomeService?.isPlaying == true) {
-            activity?.runOnUiThread { binding.beatsView.nextBeat() }
+            activity?.runOnUiThread { binding.beatsView.nextBeat(tick = tick) }
             activity?.runOnUiThread {
                 if ((activeTheme != Colors.White.name) && (isFlashOn == "true")) {
                     changeTheme(activeTheme)
@@ -395,6 +410,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
 
     private fun changeTheme(activeColor: String) {
+
         when (activeColor) {
 
             Colors.White.name -> {
@@ -473,6 +489,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
                 }
             }
         }
+
         toggleColor = !toggleColor
     }
 
