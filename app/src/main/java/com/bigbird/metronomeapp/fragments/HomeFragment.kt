@@ -184,6 +184,7 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
                         Keys.keyPracticeTime,
                         timeee.toString()
                     )
+                    totalPlayedForSeconds=0
 
                 } else {
 
@@ -256,6 +257,8 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
 
         }
 
+        if(totalPlayedForSeconds>0)
+        binding.tvTimer.text = GlobalCommon.formatTime(totalPlayedForSeconds)
 
         return binding.root
 
@@ -395,10 +398,10 @@ class HomeFragment : AbstractMetronomeFragment(), MetronomeService.TimeTickerLis
         }
     }
 
-    override fun onTick(tick: Int) {
-        GlobalCommon.print("ticckkk==${tick.toString()}")
+    override fun onTick(interval: Int) {
+        GlobalCommon.print("ticckkk==${interval.toString()}")
         if (this.isVisible && isAdded && metronomeService?.isPlaying == true) {
-            activity?.runOnUiThread { binding.beatsView.nextBeat(tick = tick) }
+            activity?.runOnUiThread { binding.beatsView.nextBeat(tick = interval) }
             activity?.runOnUiThread {
                 if ((activeTheme != Colors.White.name) && (isFlashOn == "true")) {
                     changeTheme(activeTheme)
